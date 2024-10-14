@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',  # Django REST Framework
+    'rest_framework.authtoken',  # Required for token-based authentication
     'dj_rest_auth',  # dj-rest-auth for authentication
     'corsheaders',  # Cross-Origin support
 ]
@@ -140,6 +141,7 @@ REST_FRAMEWORK = {
 
     # Default authentication classes to be used in the REST API
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Token-based authentication for stateless clients
         'rest_framework.authentication.SessionAuthentication',  # Use session-based authentication for browser clients
     ],
     # Default permission classes that determine who has access to the API views
@@ -147,6 +149,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',  # Require authenticated users by default for all views
     ],
 }
+
+DJRESTAUTH_TOKEN_MODEL = None  # Disable token authentication model for dj-rest-auth
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Allow requests from your Next.js frontend
