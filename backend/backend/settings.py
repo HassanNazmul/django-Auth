@@ -38,10 +38,24 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',  # Django REST Framework
-    'rest_framework.authtoken',  # Required for token-based authentication
-    'dj_rest_auth',  # dj-rest-auth for authentication
     'corsheaders',  # Cross-Origin support
+
+    # Django apps
+    'django.contrib.sites',  # Required by django-allauth
+
+    # REST framework
+    'rest_framework',
+    'rest_framework.authtoken',  # Required for token-based authentication
+
+    # dj-rest-auth for API-based auth
+    'dj_rest_auth',
+    'dj_rest_auth.registration',  # Enables registration endpoint
+
+    # django-allauth for registration and social auth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',  # Optional: Required for social login
+    # Add specific social providers (Google, Facebook, etc.)
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS
@@ -52,6 +66,8 @@ MY_APPS = [
 
 INSTALLED_APPS += MY_APPS
 
+SITE_ID = 1
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Add this for CORS support
     'django.middleware.security.SecurityMiddleware',
@@ -61,6 +77,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # AllAuth account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -140,14 +159,14 @@ REST_FRAMEWORK = {
     'DATE_FORMAT': '%d-%b-%Y',  # Format: Day-Month-Year for date fields
 
     # Default authentication classes to be used in the REST API
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': {
         'rest_framework.authentication.TokenAuthentication',  # Token-based authentication for stateless clients
         'rest_framework.authentication.SessionAuthentication',  # Use session-based authentication for browser clients
-    ],
+    },
     # Default permission classes that determine who has access to the API views
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': {
         'rest_framework.permissions.IsAuthenticated',  # Require authenticated users by default for all views
-    ],
+    }
 }
 
 DJRESTAUTH_TOKEN_MODEL = None  # Disable token authentication model for dj-rest-auth
@@ -166,10 +185,9 @@ CORS_ALLOW_HEADERS = [
     'X-CSRFToken',  # Required for CSRF protection
 ]
 
-# Cookie settings to enhance security and enforce CSRF protection
-SESSION_COOKIE_SECURE = True  # Only send session cookies over HTTPS to prevent interception
-SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access to session cookies to reduce XSS attack risk
-SESSION_COOKIE_SAMESITE = 'Lax'  # Restrict cross-site sending of session cookies, but allow it for top-level navigation
-CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS to prevent CSRF attacks
-CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookies to reduce XSS attack risk
-CSRF_COOKIE_SAMESITE = 'Lax'  # Restrict cross-site sending of CSRF cookies, but allow it for top-level navigation
+# Django Allauth settings
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Users must confirm their email
+ACCOUNT_EMAIL_REQUIRED = True  # Ensure email is required
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Use email to log in
+ACCOUNT_USERNAME_REQUIRED = False  # Disable username, use only email
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # No username field
