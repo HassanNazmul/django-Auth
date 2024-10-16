@@ -152,6 +152,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'user_management.CustomUser'
+
 # Custom settings.py for Django REST framework settings
 REST_FRAMEWORK = {
     # Default Date and Time format for serialized data output
@@ -161,7 +163,7 @@ REST_FRAMEWORK = {
     # Default authentication classes to be used in the REST API
     'DEFAULT_AUTHENTICATION_CLASSES': {
         'rest_framework.authentication.TokenAuthentication',  # Token-based authentication for stateless clients
-        'rest_framework.authentication.SessionAuthentication',  # Use session-based authentication for browser clients
+        # 'rest_framework.authentication.SessionAuthentication',  # Use session-based authentication for browser clients
     },
     # Default permission classes that determine who has access to the API views
     'DEFAULT_PERMISSION_CLASSES': {
